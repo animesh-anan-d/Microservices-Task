@@ -1,68 +1,121 @@
-# Microservices-Task
+# Microservices with Docker Compose
 
-## Overview
-This document provides details on testing various services after running the `docker-compose` file. These services include User, Product, Order, and Gateway Services. Each service has its own endpoints for testing purposes.
+![Microservices Architecture](screenshots/architecture.png)
 
----
+## Table of Contents
+- [Setup Instructions](#setup-instructions)
+- [Testing Services](#testing-services)
+- [Troubleshooting](#troubleshooting)
+- [Screenshots](#screenshots)
 
-## Services and Endpoints
+## Setup Instructions
 
-### **User Service**
-- **Base URL:** `http://localhost:3000`
-- **Endpoints:**
-  - **List Users:**  
-    ```
-    curl http://localhost:3000/users
-    ```
-    Or open in your browser: [http://localhost:3000/users](http://localhost:3000/users)
+### Prerequisites
+- Docker Desktop ([Download](https://www.docker.com/products/docker-desktop))
+- Git ([Download](https://git-scm.com/downloads))
 
----
+### Installation Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/Microservices-Task.git
+   cd Microservices-Task
+Start all services:
 
-### **Product Service**
-- **Base URL:** `http://localhost:3001`
-- **Endpoints:**
-  - **List Products:**  
-    ```
-    curl http://localhost:3001/products
-    ```
-    Or open in your browser: [http://localhost:3001/products](http://localhost:3001/products)
+bash
+docker-compose up --build
+Verify all containers are running:
 
----
+bash
+docker ps
+Should show 4 containers with status "Up"
 
-### **Order Service**
-- **Base URL:** `http://localhost:3002`
-- **Endpoints:**
-  - **List Orders:**  
-    ```
-    curl http://localhost:3002/orders
-    ```
-    Or open in your browser: [http://localhost:3002/orders](http://localhost:3002/orders)
+Testing Services
+Endpoints
+Service	URL	Command	Expected Response
+User Service	http://localhost:3000/users	curl http://localhost:3000/users	[{"name":"Jane Smith"}]
+Product Service	http://localhost:3001/products	curl http://localhost:3001/products	[{"price":99.99}]
+Order Service	http://localhost:3002/orders	curl http://localhost:3002/orders	[]
+Gateway Service	http://localhost:3003/api/users	curl http://localhost:3003/api/users	Routes to User Service
+Browser Testing
+Open these URLs in your web browser:
 
----
+User Service: http://localhost:3000/users
 
-### **Gateway Service**
-- **Base URL:** `http://localhost:3003/api`
-- **Endpoints:**
-  - **Users:**  
-    ```
-    curl http://localhost:3003/api/users
-    ```
-  - **Products:**  
-    ```
-    curl http://localhost:3003/api/products
-    ```
-  - **Orders:**  
-    ```
-    curl http://localhost:3003/api/orders
-    ```
+Product Service: http://localhost:3001/products
 
----
+Order Service: http://localhost:3002/orders
 
-## Instructions
-1. Start all services using the `docker-compose` file:
-   ```
-   docker-compose up
-   ```
-2. Once the services are running, use the above endpoints to verify the functionality.
+Troubleshooting
+Common Issues
+Port already in use:
 
-Happy testing!
+bash
+Error: Port 3000 is already allocated
+Solution: Change ports in docker-compose.yml or run:
+
+bash
+netstat -ano | findstr :3000
+taskkill /PID <PID> /F
+Missing dependencies:
+
+bash
+Error: Cannot find module 'express'
+Solution:
+
+bash
+docker-compose down
+docker-compose build --no-cache
+docker-compose up
+Containers crash on startup:
+
+bash
+docker logs <container-name>  # Check specific errors
+Empty responses:
+
+Verify endpoint URLs are exact
+
+Check service logs:
+
+bash
+docker-compose logs user-service
+Complete Reset
+bash
+docker-compose down -v  # Remove containers and volumes
+docker system prune -a  # Clean unused Docker objects
+Screenshots
+Docker Containers Running
+Running Containers
+
+User Service
+User Service
+
+Product Service
+Product Service
+
+Order Service
+Order Service
+
+License
+This project is licensed under the MIT License - see LICENSE file for details.
+
+
+### How to Use This README:
+1. **Replace placeholders**:
+   - Change `your-username` in the clone URL
+   - Ensure your screenshots match the specified names in the `screenshots/` folder
+
+2. **Save**:
+   - Copy all content
+   - Paste into a new file named `README.md` in your project root
+
+3. **Verify**:
+   - All links work
+   - Image paths match your screenshot filenames
+   - Port numbers match your `docker-compose.yml`
+
+### Key Features:
+- Complete setup-to-troubleshooting guide
+- Ready-to-copy curl commands
+- Visual verification with screenshots
+- Clean markdown formatting
+- License reference
